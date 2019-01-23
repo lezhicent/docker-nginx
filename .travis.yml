@@ -1,0 +1,53 @@
+language: bash
+
+sudo: required
+
+services:
+  - docker
+
+env:
+#   Debian
+  - OS_SUITE=alpine NGINX_SUITE=mainline VERSION=1.13.9
+#  - OS_SUITE=alpine NGINX_SUITE=stable VERSION=1.12.2
+#   Ubuntu
+  - OS_SUITE=xenial NGINX_SUITE=mainline VERSION=1.13.9
+#  - OS_SUITE=xenial NGINX_SUITE=stable VERSION=1.12.2
+
+before_install:
+  - export DOCKER_COMPOSE_VERSION=1.23.2
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
+
+before_script:
+  - env | sort
+  - cd "$OS_SUITE/$NGINX_SUITE"
+  - image="lezhicent/nginx:${VERSION}-${OS_SUITE}"
+
+script:
+  - travis_retry docker build -t "$image" .
+
+after_success:
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then
+      docker login --username="${DOCKER_REGISTRY_USER}" --password="${DOCKER_REGISTRY_PASSWORD}";
+      docker push $image;
+      docker tag $image lezhicent/nginx:${VERSION};
+      docker push lezhicent/nginx:${VERSION};
+      if [[ "${VERSION}" == "1.13.8" && "${OS_SUITE}" == "alpine" ]]; then
+        docker tag $image lezhicent/nginx:1.13;
+        docker push lezhicent/nginx:1.13;
+        docker tag $image lezhicent/nginx:latest;
+        docker push lezhicent/nginx:latest;
+        docker tag $image lezhicent/nginx:mainline;
+        docker push lezhicent/nginx:mainline;
+      fi;
+      if [[ "${VERSION}" == "1.12.2" && "${OS_SUITE}" == "alpine" ]]; then
+        docker tag $image lezhicent/nginx:stable;
+        docker push lezhicent/nginx:stable;
+        docker tag $image lezhicent/nginx:1.12;
+        docker push lezhicent/nginx:1.12;
+      fi;
+    fi;
+
+# vim:set et ts=2 sw=2:
