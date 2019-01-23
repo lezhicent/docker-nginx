@@ -1,6 +1,6 @@
 FROM lezhicent/ubuntu:xenial
 
-LABEL maintainer="xutongle@gmail.com"
+LABEL maintainer="lezhi2018@gmail.com"
 
 RUN set -x \
 #	&& sed -i 's/archive.ubuntu.com/mirrors.aliyun.com/' /etc/apt/sources.list \

@@ -7,11 +7,11 @@ services:
 
 env:
 #   Debian
-  - OS_SUITE=alpine NGINX_SUITE=mainline VERSION=1.13.9
-#  - OS_SUITE=alpine NGINX_SUITE=stable VERSION=1.12.2
+  - OS_SUITE=alpine NGINX_SUITE=mainline VERSION=1.15.8
+#  - OS_SUITE=alpine NGINX_SUITE=stable VERSION=1.14.2
 #   Ubuntu
-  - OS_SUITE=xenial NGINX_SUITE=mainline VERSION=1.13.9
-#  - OS_SUITE=xenial NGINX_SUITE=stable VERSION=1.12.2
+  - OS_SUITE=xenial NGINX_SUITE=mainline VERSION=1.15.8
+#  - OS_SUITE=xenial NGINX_SUITE=stable VERSION=1.14.2
 
 before_install:
   - export DOCKER_COMPOSE_VERSION=1.23.2
@@ -34,19 +34,19 @@ after_success:
       docker push $image;
       docker tag $image lezhicent/nginx:${VERSION};
       docker push lezhicent/nginx:${VERSION};
-      if [[ "${VERSION}" == "1.13.8" && "${OS_SUITE}" == "alpine" ]]; then
-        docker tag $image lezhicent/nginx:1.13;
-        docker push lezhicent/nginx:1.13;
+      if [[ "${VERSION}" == "1.15.8" && "${OS_SUITE}" == "alpine" ]]; then
+        docker tag $image lezhicent/nginx:1.15;
+        docker push lezhicent/nginx:1.15;
         docker tag $image lezhicent/nginx:latest;
         docker push lezhicent/nginx:latest;
         docker tag $image lezhicent/nginx:mainline;
         docker push lezhicent/nginx:mainline;
       fi;
-      if [[ "${VERSION}" == "1.12.2" && "${OS_SUITE}" == "alpine" ]]; then
+      if [[ "${VERSION}" == "1.14.2" && "${OS_SUITE}" == "alpine" ]]; then
         docker tag $image lezhicent/nginx:stable;
         docker push lezhicent/nginx:stable;
-        docker tag $image lezhicent/nginx:1.12;
-        docker push lezhicent/nginx:1.12;
+        docker tag $image lezhicent/nginx:1.14;
+        docker push lezhicent/nginx:1.14;
       fi;
     fi;
 
