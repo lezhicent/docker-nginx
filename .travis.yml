@@ -26,7 +26,7 @@ before_script:
   - image="lezhicent/nginx:${VERSION}-${OS_SUITE}"
 
 script:
-  - travis_retry docker build -t "$image" .
+  - travis_retry docker build --build-arg NGINX_VERSION=${VERSION} -t "$image" .
 
 after_success:
   - if [ "$TRAVIS_BRANCH" == "master" ]; then
